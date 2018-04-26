@@ -12,10 +12,22 @@ class PopularStream
   HALF_LIFE = 1 * DAY
 
   class << self
-    attr_accessor :redis
+    def redis=(connection)
+      @redis = connection
+    end
+    
+    # Set the connection with a block. The block will be called at runtime to get the redis connection.
+    def set_redis(&block)
+      @redis = block
+    end
 
     def redis
       @redis ||= Redis.new(url: ENV['REDIS_URL'])
+      if @redis.is_a?(Proc)
+        @redis.call
+      else
+        @redis
+      end
     end
   end
 

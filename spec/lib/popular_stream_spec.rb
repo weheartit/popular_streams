@@ -13,8 +13,14 @@ RSpec.describe PopularStream do
   describe ".redis" do
     let(:redis) { double }
 
-    it "is possible to set a redis instace" do
-      expect { PopularStream.redis = redis }.not_to raise_error
+    it "is possible to set a redis instance" do
+      PopularStream.redis = redis
+      expect(PopularStream.redis).to eq redis
+    end
+    
+    it "can set the redis instance with a block" do
+      PopularStream.set_redis{ redis }
+      expect(PopularStream.redis).to eq redis
     end
   end
 
